@@ -26,11 +26,11 @@ else
     [[ -e "$URL" ]] || { echo "Invalid Input" && exit 1; }
 fi
 
-ORG=AndroidDumps #your GitHub org name
+ORG=ghostrider-reborn #your GitHub org name
 FILE=$(echo ${URL##*/} | inline-detox)
 EXTENSION=$(echo ${URL##*.} | inline-detox)
 UNZIP_DIR=${FILE/.$EXTENSION/}
-PARTITIONS="system vendor cust odm oem factory product modem xrom systemex system_ext"
+PARTITIONS="modem my_carrier.00011011 my_company my_engineering my_heytap.00011011 my_manifest.00011011 my_preload.00011011 my_product my_region.00011011 my_stock.00011011 odm product system_ext system vendor"
 
 if [[ -d "$1" ]]; then
     echo 'Directory detected. Copying...'
@@ -67,7 +67,7 @@ fi
 
 # Extract boot.img
 if [[ -f "$PROJECT_DIR"/working/"${UNZIP_DIR}"/boot.img ]]; then
-    python3 "$PROJECT_DIR"/extract-dtb/extract-dtb.py "$PROJECT_DIR"/working/"${UNZIP_DIR}"/boot.img -o "$PROJECT_DIR"/working/"${UNZIP_DIR}"/bootimg > /dev/null # Extract boot
+    python3 "$PROJECT_DIR"/extract-dtb/extract_dtb/extract_dtb.py "$PROJECT_DIR"/working/"${UNZIP_DIR}"/boot.img -o "$PROJECT_DIR"/working/"${UNZIP_DIR}"/bootimg > /dev/null # Extract boot
     bash "$PROJECT_DIR"/mkbootimg_tools/mkboot "$PROJECT_DIR"/working/"${UNZIP_DIR}"/boot.img "$PROJECT_DIR"/working/"${UNZIP_DIR}"/boot > /dev/null 2>&1
     echo 'boot extracted'
     # extract-ikconfig
@@ -82,7 +82,7 @@ if [[ -f "$PROJECT_DIR"/working/"${UNZIP_DIR}"/boot.img ]]; then
 fi
 
 if [[ -f "$PROJECT_DIR"/working/"${UNZIP_DIR}"/dtbo.img ]]; then
-    python3 "$PROJECT_DIR"/extract-dtb/extract-dtb.py "$PROJECT_DIR"/working/"${UNZIP_DIR}"/dtbo.img -o "$PROJECT_DIR"/working/"${UNZIP_DIR}"/dtbo > /dev/null # Extract dtbo
+    python3 "$PROJECT_DIR"/extract-dtb/extract_dtb/extract_dtb.py "$PROJECT_DIR"/working/"${UNZIP_DIR}"/dtbo.img -o "$PROJECT_DIR"/working/"${UNZIP_DIR}"/dtbo > /dev/null # Extract dtbo
     echo 'dtbo extracted'
 fi
 
@@ -157,7 +157,7 @@ description=$(grep -oP "(?<=^ro.build.description=).*" -hs {system,system/system
 is_ab=$(grep -oP "(?<=^ro.build.ab_update=).*" -hs {system,system/system,vendor}/build*.prop | head -1)
 [[ -z "${is_ab}" ]] && is_ab="false"
 branch=$(echo "$description" | tr ' ' '-')
-repo=$(echo "$brand"_"$codename"_dump | tr '[:upper:]' '[:lower:]')
+repo=realme_x3_dump
 platform=$(echo "$platform" | tr '[:upper:]' '[:lower:]' | tr -dc '[:print:]' | tr '_' '-' | cut -c 1-35)
 top_codename=$(echo "$codename" | tr '[:upper:]' '[:lower:]' | tr -dc '[:print:]' | tr '_' '-' | cut -c 1-35)
 manufacturer=$(echo "$manufacturer" | tr '[:upper:]' '[:lower:]' | tr -dc '[:print:]' | tr '_' '-' | cut -c 1-35)
